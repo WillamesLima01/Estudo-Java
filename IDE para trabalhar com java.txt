@@ -1,0 +1,9 @@
+IDE para trabalhar com java
+
+-intellij IDEA (baixar)
+-eclipse
+
+
+livro "Aprenda programação orientada a objeto em 21 dia"
+
+curso java no youtube ioana
