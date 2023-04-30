@@ -12,34 +12,60 @@ public class CartaoCredito {
 	private double SaldoDiponivel;
 	private Date DataVencimento;	
 	private double aumentolimite;
-	private double compras;
+	private String compras;
 	private double TotalCompras;
-	private double valorCompra;
+	private String valorCompra;
 	private String localCompra;
 	private String dataCompra;
-	
-	
-	ArrayList<CartaoCredito> HistoricoCompras = new ArrayList<>();
+	private String cancelaropcao;	
 	
 	NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
-	
-	
+		
 	public CartaoCredito() {//método construtor
-		
-		
+				
 	}		
+				
+	public String getValorCompra() {
+		return valorCompra;
+	}
+
+	public void setValorCompra(String valorCompra) {
+
+		this.compras = "valor da compra : R$ "+ valorCompra;
 		
-	public double getCompras() {		
+	}
+
+	public String getLocalCompra() {
+		return localCompra;
+	}
+
+	public void setLocalCompra(String localCompra) {
+
 		
+		this.compras = this.compras + " ; Local da compra efetuada : " + localCompra;
+		
+	}
+
+	public String getDataCompra() {
+		return dataCompra;
+	}
+
+	public void setDataCompra(String dataCompra) {
+		
+		this.compras = this.compras + " ; Data da compra : " + dataCompra;
+		this.setCompras(compras);
+	}
+
+	public String getCompras() {
 		return compras;
 	}
-	
-	public void setCompras(double compras) {
-							
-		TotalCompras += this.compras;		
+
+	public void setCompras(String compras) {		
+		
+		JOptionPane.showMessageDialog(null, "Parabéns!!! compra realizada com sucesso! ");
 		
 	}
-	
+
 	public double getTotalCompras() {
 		return TotalCompras;
 	}
@@ -106,6 +132,6 @@ public class CartaoCredito {
 	public void setDataVencimento(Date dataVencimento) {
 		
 		DataVencimento = dataVencimento;
-	}
-
+	}	
+	
 }

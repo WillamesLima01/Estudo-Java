@@ -2,13 +2,13 @@ package Seguranca;
 
 public class Autenticacao {
 		
-	private String login;
-	private String senha;
+	private String login = "willames";
+	private String senha = "123";
 	
 	
 	public boolean Autenticar() {
 		
-		return login.equals("willames") && senha.equals("123");
+		return login.equals(login) && senha.equals(senha);
 		
 	}
 

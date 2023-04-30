@@ -1,5 +1,12 @@
 package classes;
 
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JOptionPane;
+
 public class Movimentacao {
     private double saldo;
     private double extrato;
@@ -7,18 +14,88 @@ public class Movimentacao {
     private double transferencia;
     private double deposito;
     private double saque;
-
-
+    private String descricaoExtrato;
+    private String opcao;
+    private Date dataAtual;
+    private String dataTexto;
+    
+    NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
+           
+    
     public Movimentacao() {
+		
+	}
 
-    }
+	    
+   
+	public String getOpcao() {
+		return opcao;
+	}
+
+
+
+	public void setOpcao(String opcao) {
+		
+		switch (opcao) {
+			case "1":
+				this.descricaoExtrato = "Operação Saldo ; "+ this.dataTexto + "; Valor : " + (vlr.format(this.saldo));
+				break;
+			case "2":
+				this.descricaoExtrato = "Extrato";
+				break;
+			case "3":
+				this.descricaoExtrato = "Saque";
+				break;
+			case "4":
+				this.descricaoExtrato = "Depósito";
+				break;
+			case "5":
+				this.descricaoExtrato = "Transferência";
+				break;
+			case "6":
+				this.descricaoExtrato = "Pagamento";
+				break;
+		
+		}
+	}
+
+
+
+	public Date getDataAtual() {
+		return dataAtual;
+	}
+
+	public void setDataAtual(Date dataAtual) {
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		this.dataTexto = dateFormat.format(dataAtual);
+		
+	}
+
+	public String getDataTexto() {
+		return dataTexto;
+	}
+
+	public void setDataTexto(String datatexto) {
+		this.dataTexto = datatexto;
+	}
+
+	public String getDescricaoExtrato() {
+		return descricaoExtrato;
+	}
+
+	public void setDescricaoExtrato(String descricaoExtrato) {
+		this.descricaoExtrato = descricaoExtrato;
+	}	
 
     public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public void setSaldo(double saldo) {    	
+    	
+        this.saldo =saldo;
+        
     }
 
     public double getExtrato() {
@@ -35,7 +112,7 @@ public class Movimentacao {
 
     public void setPagamento(double pagamento) {
         this.saldo -= pagamento;
-        System.out.println("Pagamento efetuado com sucesso! Seu novo saldo é de R$ " + this.saldo);
+        JOptionPane.showMessageDialog(null,"Pagamento efetuado com sucesso! Seu novo saldo é de " + (vlr.format(this.saldo)));        
     }
 
     public double getTransferencia() {
@@ -51,8 +128,8 @@ public class Movimentacao {
     }
 
     public void setDeposito(double deposito) {
-        this.saldo += deposito;
-        System.out.println("Seu novo saldo em conta corrente é de R$ " + this.saldo);
+        this.saldo += deposito;        
+        JOptionPane.showMessageDialog(null,"Seu novo saldo em conta corrente é de " + (vlr.format(this.saldo)));
     }
 
     public double getSaque() {
@@ -61,10 +138,13 @@ public class Movimentacao {
 
     public void setSaque(double saque) {
         if (saque <= this.saldo) {
-            this.saldo -= saque;
-            System.out.println("Seu novo saldo é R$ " + this.saldo);
+            this.saldo -= saque;            
+            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(this.saldo)));
+            
         } else {
-            System.out.println("Saldo insuficinete!");
+        	            
+            JOptionPane.showMessageDialog(null, "Saldo insuficiente!");
+            
         }
 
     }

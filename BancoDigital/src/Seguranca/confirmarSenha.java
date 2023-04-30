@@ -4,10 +4,11 @@ public class confirmarSenha {
 		
 	private String senhaPermissao;
 	
+	Autenticacao autenticacao = new Autenticacao();
 	
 	public boolean permissao() {
 		
-		return senhaPermissao.equals("123456");
+		return senhaPermissao.equals(autenticacao.getSenha());
 		
 	}
 
