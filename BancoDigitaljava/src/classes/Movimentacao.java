@@ -38,28 +38,26 @@ public class Movimentacao {
 		
 		switch (opcao) {
 			case "1":
-				this.descricaoExtrato = "Operação Saldo ; "+ this.dataTexto + "; Valor : " + (vlr.format(this.saldo));
+				this.descricaoExtrato = "Operação Saldo ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 			case "2":
-				this.descricaoExtrato = "Extrato";
+				this.descricaoExtrato = "Operação Extrato ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 			case "3":
-				this.descricaoExtrato = "Saque";
+				this.descricaoExtrato = "Operação Saque ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saque));
 				break;
 			case "4":
-				this.descricaoExtrato = "Depósito";
+				this.descricaoExtrato = "Operação Depósito ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 			case "5":
-				this.descricaoExtrato = "Transferência";
+				this.descricaoExtrato = "Operação Transferência ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 			case "6":
-				this.descricaoExtrato = "Pagamento";
+				this.descricaoExtrato = "Operação Pagamento ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 		
 		}
 	}
-
-
 
 	public Date getDataAtual() {
 		return dataAtual;
@@ -138,7 +136,8 @@ public class Movimentacao {
 
     public void setSaque(double saque) {
         if (saque <= this.saldo) {
-            this.saldo -= saque;            
+            this.saldo -= saque; 
+            this.saque= saque;
             JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(this.saldo)));
             
         } else {
