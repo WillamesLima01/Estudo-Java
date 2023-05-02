@@ -45,7 +45,10 @@ public class App {
 	    					
 	    					Boolean sair = false;//variável de controle do sistema após a autenticação do login e senha
 	    					
+	    					CartaoCredito cartaoCredito = new CartaoCredito();
+	    					
 	    					ArrayList<String> extratoCc = new ArrayList<>();
+	    					ArrayList<String> Historico = new ArrayList<>();
 	    					
 	    					while (sair == false) {
 	    				
@@ -129,12 +132,14 @@ public class App {
 		    						
 						
 		    					} else if(opcao.equals("2")) {//resolve as transações de cartão de crédito
-						
+		    						
 		    						String opCartao = JOptionPane.showInputDialog("O que deseja realizar :\n"+"1- Limite de crédito\n"+"2- Saldo disponível\n"+
 		    															"3- Data de vencimento\n"+"4- Histórico de compra\n"+"5- Comprar com cartão\n"+"6- sair");
 						
 		    							if(opCartao.equals("1")) {//Opção limite de crédito
-							
+		    								
+		    									//CartaoCredito cartaoCredito = new CartaoCredito();
+		    									
 		    									String opCartao1 = JOptionPane.showInputDialog("- Limite de crédito\n"+"-------------------------------\n"+"O que deseja realizar :\n"+
 		    																					"1- Aumentar Limite de crédito\n"+"2- Consultar limite de crédito\n"+"-------------------------------");
 							
@@ -143,41 +148,68 @@ public class App {
 		    											String aumentolimitecar = JOptionPane.showInputDialog("- Limite de crédito\n"+"---------------------------------------------------------\n"+
 		    														"Informe o valor desejado de acréscimo\n"+"---------------------------------------------------------");
 								
-		    											CartaoCredito cartaoCredito = new CartaoCredito();
-								
 		    											cartaoCredito.setAumentolimite(Double.parseDouble(aumentolimitecar));
-																										
-		    									} else if(opCartao1.equals("2")) {
-								
-		    											CartaoCredito cartaoCredito = new CartaoCredito();
-								
+														cartaoCredito.setLimiteCredito(cartaoCredito.getAumentolimite());
+														
+		    									} else if(opCartao1.equals("2")) {								
+		    													    											
 		    											JOptionPane.showMessageDialog(null, "O valor de limite de crédito do cartão é R$ "+vlr.format(cartaoCredito.getLimiteCredito()));
 											
-		    											System.exit(resposta);//terminar codigo (parar o código)
+		    											continue;//System.exit(resposta);//terminar codigo (parar o código)
+		    											
 		    									}
 							
 		    							} else if(opCartao.equals("2")) {//Opção saldo disponível
 							
-		    									CartaoCredito cartaoCredito = new CartaoCredito();
+		    									//CartaoCredito cartaoCredito = new CartaoCredito();
 							
 		    									cartaoCredito.setSaldoDiponivel(0);//pesquisar como chamar set pelo get
 							
 							
 		    							} else if(opCartao.equals("3")) {//Opção data de vencimento
 							
-		    									CartaoCredito cartaoCredito = new CartaoCredito();					
+		    								cartaoCredito.setDataVencimento("25/05/2028");
 							
 		    							} else if(opCartao.equals("4")) {//Opção histórico de compra
-							
-							
-							
+		    								
+			    								int n = Historico.size();
+												
+			    								if (n > 0) {
+														String[][]imprimirHistorico = new String[n][1];
+														
+														StringBuilder HC = new StringBuilder();
+														
+														for(int i = 0; i < n; i++) {//adiciona os elementos de extratoCc na matriz de uma coluna com n linhas
+																														
+															imprimirHistorico[i][0] = Historico.get(i);
+															
+														}	
+																											
+														HC.append("<center><b>Histórico Catão de Crédito</br></center>");
+														HC.append("<hr>");//adiciona linha horizontal no extrato
+														
+														for(int i = 0; i < n; i++) {//organiza a impressão com quebras de linha um em baixo de outro
+															
+															HC.append(imprimirHistorico[i][0]).append("<br><hr>");
+															
+														}														
+														
+														JOptionPane.showMessageDialog(null, "<html>" + HC.toString()+ "<html>", "Histórico Catão de Crédito", JOptionPane.INFORMATION_MESSAGE);//imprimir o extrato organizado									
+																												
+														continue;
+												
+			    								} else {
+			    									
+			    										JOptionPane.showMessageDialog(null, "Sem registro de histórico de cartão de crédito");
+			    										continue;
+			    								}
+			    								
+																		
 		    							} else if(opCartao.equals("5")) {//Opção comprar com cartão
 												
 		    									String entrada = "";
 		    									int cancelar = 0;
-		    									boolean continuar = false; 
-							
-		    									ArrayList<String> Historico = new ArrayList<String>();
+		    									boolean continuar = false; 		    									
 							
 		    									while(entrada.equals("")) {											
 									
@@ -223,15 +255,16 @@ public class App {
 		    																	
 		    															} else {
 								
-		    																	CartaoCredito cartaoCredito = new CartaoCredito();
+		    																	//CartaoCredito cartaoCredito = new CartaoCredito();
 								
 		    																	String senhaPermissao = JOptionPane.showInputDialog("Informe senha para liberar comprar : ");
 																				
-		    																			if (autenticacao.getSenha().equals(senhaPermissao)) {
+		    																			if (autenticacao.getSenhaAcesso().equals(senhaPermissao)) {
 									
 		    																				cartaoCredito.setValorCompra(valorCompra);
 		    																				cartaoCredito.setLocalCompra(localCompra);
 		    																				cartaoCredito.setDataCompra(dataCompra);
+		    																				cartaoCredito.setTotalCompras(Double.parseDouble(valorCompra));
 		    																				Historico.add(cartaoCredito.getCompras());
 									
 		    																			} else {
@@ -277,7 +310,7 @@ public class App {
 	    					
 	    			} else {
 	    		
-	    				JOptionPane.showMessageDialog(null, "Acesso negado!" + " senhor " + login + " nome do usuário e/ou senha não confere com a cadastrada.");
+	    				JOptionPane.showMessageDialog(null, "Acesso negado!" + " senhor " + login + " nome do usuário e/ou senha não confere(m) com o(s) cadastrado(s).");
 	    		
 	    			}
 			

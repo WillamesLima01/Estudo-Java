@@ -10,7 +10,7 @@ public class CartaoCredito {
 	
 	private double LimiteCredito = 3000;
 	private double SaldoDiponivel;
-	private Date DataVencimento;	
+	private String DataVencimento;	
 	private double aumentolimite;
 	private String compras;
 	private double TotalCompras;
@@ -24,7 +24,7 @@ public class CartaoCredito {
 	public CartaoCredito() {//método construtor
 				
 	}		
-				
+						
 	public String getValorCompra() {
 		return valorCompra;
 	}
@@ -32,7 +32,7 @@ public class CartaoCredito {
 	public void setValorCompra(String valorCompra) {
 
 		this.compras = "valor da compra : R$ "+ valorCompra;
-		
+				
 	}
 
 	public String getLocalCompra() {
@@ -71,9 +71,9 @@ public class CartaoCredito {
 	}
 
 
-	public void setTotalCompras(double totalCompras) {
+	public void setTotalCompras(double valorCompra) {
 				
-		TotalCompras = totalCompras;
+		this.TotalCompras += valorCompra;
 	}
 
 
@@ -87,14 +87,11 @@ public class CartaoCredito {
 		if (aumentolimite > 10000) {
 			
 			JOptionPane.showMessageDialog(null,"O valor desejado precisa ser avaliado pela gerencia financiara!\n"+
-					"                Favor entrar em contato com sua gerencia!");
+					"                Favor entrar em contato com sua gerencia!");		
 			
-		} else {
-			
-			LimiteCredito += aumentolimite;		
-		
-			JOptionPane.showMessageDialog(null,"Operação realizada com sucesso!\n"+"Seu novo limite de crédito é de "+(vlr.format(LimiteCredito)));
 		}
+		
+		this.aumentolimite = aumentolimite;
 	}		
 	
 	public double getLimiteCredito() {
@@ -105,7 +102,8 @@ public class CartaoCredito {
 	
 	public void setLimiteCredito(double limiteCredito) {
 		
-		this.LimiteCredito = limiteCredito;
+		this.LimiteCredito += getAumentolimite();
+		JOptionPane.showMessageDialog(null,"Operação realizada com sucesso!\n"+"Seu novo limite de crédito é de "+(vlr.format(LimiteCredito)));
 		
 	}
 	
@@ -119,19 +117,18 @@ public class CartaoCredito {
 	public void setSaldoDiponivel(double saldoDiponivel) {
 		
 		SaldoDiponivel = this.LimiteCredito - this.TotalCompras;
-		JOptionPane.showMessageDialog(null,"Saldo "+(vlr.format(this.SaldoDiponivel)));
+		JOptionPane.showMessageDialog(null,"Saldo disponível para compras no cartão de crédito "+(vlr.format(this.SaldoDiponivel)));
 		
 	}
-	
-	public Date getDataVencimento() {
-		
+
+	public String getDataVencimento() {
 		return DataVencimento;
-		
 	}
-	
-	public void setDataVencimento(Date dataVencimento) {
-		
+
+	public void setDataVencimento(String dataVencimento) {
 		DataVencimento = dataVencimento;
+		JOptionPane.showMessageDialog(null,"Seu cartão se vence em "+(dataVencimento));
+		
 	}	
 	
 }

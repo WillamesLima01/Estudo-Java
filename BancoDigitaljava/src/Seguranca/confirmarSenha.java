@@ -8,7 +8,7 @@ public class confirmarSenha {
 	
 	public boolean permissao() {
 		
-		return senhaPermissao.equals(autenticacao.getSenha());
+		return senhaPermissao.equals(autenticacao.getSenhaAcesso());
 		
 	}
 

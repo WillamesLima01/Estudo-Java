@@ -42,14 +42,5 @@ public class ContaCorrente {
     public void setLimiteChequeEspecial(double limiteChequeEspecial) {
         this.limiteChequeEspecial = limiteChequeEspecial;
     }
-
-    /*public ArrayList<String> getHistoricoTransacoes() {
-
-        return historicoTransacoes;
-    }
-
-    public void setHistoricoTransacoes(ArrayList<String> historicoTransacoes) {
-        this.historicoTransacoes = historicoTransacoes;
-    }*/
-
+   
 }
