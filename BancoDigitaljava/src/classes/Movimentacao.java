@@ -18,6 +18,7 @@ public class Movimentacao {
     private String opcao;
     private Date dataAtual;
     private String dataTexto;
+    private String contaTransferencia;
     
     NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
            
@@ -50,12 +51,9 @@ public class Movimentacao {
 				this.descricaoExtrato = "Operação Depósito ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
 				break;
 			case "5":
-				this.descricaoExtrato = "Operação Transferência ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
+				this.descricaoExtrato = "Operação Transferência ; "+ this.dataTexto + "; Conta beneficiada : " + getcontaTransferencia() + "; Valor " + (vlr.format(this.getTransferencia()));
 				break;
-			case "6":
-				this.descricaoExtrato = "Operação Pagamento ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldo));
-				break;
-		
+					
 		}
 	}
 
@@ -110,15 +108,33 @@ public class Movimentacao {
 
     public void setPagamento(double pagamento) {
         this.saldo -= pagamento;
-        JOptionPane.showMessageDialog(null,"Pagamento efetuado com sucesso! Seu novo saldo é de " + (vlr.format(this.saldo)));        
+        JOptionPane.showMessageDialog(null,"Pagamento efetuado com sucesso! Seu novo saldo é de " + (vlr.format(this.saldo)),"Saldo", JOptionPane.INFORMATION_MESSAGE);        
     }
 
     public double getTransferencia() {
         return transferencia;
     }
+    
+    public String getcontaTransferencia() {
+    	return contaTransferencia;
+    }
 
-    public void setTransferencia(double transferencia) {
+    public void setTransferencia(double transferencia, String contaTransferencia) {    	
+    	
+    	if (transferencia <= this.saldo) {
+            this.saldo -= transferencia; 
+            this.transferencia= transferencia;
+            JOptionPane.showMessageDialog(null, "Transação realizada com sucesso","Transferência", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(this.saldo)),"Saldo conta corrente", JOptionPane.INFORMATION_MESSAGE);
+            
+        } else {
+        	            
+            JOptionPane.showMessageDialog(null, "Saldo insuficiente para realizar essa transação!","Saldo", JOptionPane.INFORMATION_MESSAGE);
+            
+        }
         this.transferencia = transferencia;
+        this.contaTransferencia = contaTransferencia;
+        
     }
 
     public double getDeposito() {
@@ -127,7 +143,7 @@ public class Movimentacao {
 
     public void setDeposito(double deposito) {
         this.saldo += deposito;        
-        JOptionPane.showMessageDialog(null,"Seu novo saldo em conta corrente é de " + (vlr.format(this.saldo)));
+        JOptionPane.showMessageDialog(null,"Seu novo saldo em conta corrente é de " + (vlr.format(this.saldo)),"Depósito", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public double getSaque() {
@@ -138,11 +154,11 @@ public class Movimentacao {
         if (saque <= this.saldo) {
             this.saldo -= saque; 
             this.saque= saque;
-            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(this.saldo)));
+            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(this.saldo)),"Saque", JOptionPane.INFORMATION_MESSAGE);
             
         } else {
         	            
-            JOptionPane.showMessageDialog(null, "Saldo insuficiente!");
+            JOptionPane.showMessageDialog(null, "Saldo insuficiente!","Saldo", JOptionPane.INFORMATION_MESSAGE);
             
         }
 

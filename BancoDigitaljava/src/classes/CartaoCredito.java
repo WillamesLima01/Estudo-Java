@@ -110,15 +110,7 @@ public class CartaoCredito {
 	
 	public double getSaldoDiponivel() {
 		
-		return SaldoDiponivel;
-	}
-
-
-	public void setSaldoDiponivel(double saldoDiponivel) {
-		
-		SaldoDiponivel = this.LimiteCredito - this.TotalCompras;
-		JOptionPane.showMessageDialog(null,"Saldo disponível para compras no cartão de crédito "+(vlr.format(this.SaldoDiponivel)));
-		
+		return getLimiteCredito() - getTotalCompras();
 	}
 
 	public String getDataVencimento() {

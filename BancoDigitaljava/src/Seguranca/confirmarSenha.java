@@ -1,14 +1,16 @@
 package Seguranca;
 
+import classes.Clientes;
+
 public class confirmarSenha {
 		
 	private String senhaPermissao;
 	
-	Autenticacao autenticacao = new Autenticacao();
+	Clientes clientes = new Clientes();
 	
 	public boolean permissao() {
 		
-		return senhaPermissao.equals(autenticacao.getSenhaAcesso());
+		return senhaPermissao.equals(clientes.getSenhaAcesso());
 		
 	}
 
