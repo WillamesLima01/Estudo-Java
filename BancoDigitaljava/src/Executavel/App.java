@@ -28,8 +28,12 @@ public class App {
 		String usuario = " ";
 		Boolean sairDoDistema = false;
 		Random random = new Random();		
+	
+	
 		
-		while (sairDoDistema == false) {			
+		while (sairDoDistema == false) {
+			
+			try{	
 						
 			int resposta = JOptionPane.showConfirmDialog(null, "Bem vindo! o senhor já é Cliente? ","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
 						
@@ -433,7 +437,41 @@ public class App {
 	    		    		
 	    	}
 	    
-		} //fim do while sairdosistema
+		
+		
+	} catch (NumberFormatException e) {
+		
+		StringBuilder saida = new StringBuilder();		
+		
+		/*Imprime erro no console java*/
+		e.printStackTrace();	
+		
+		/*Mensagem do erro ou causa*/		
+		System.out.println("Mensagem: " + e.getMessage());	
+		
+		for (int pos = 0; pos < e.getStackTrace().length; pos++) {				
+			saida.append("\n Classe de erro : " + e.getStackTrace()[pos].getClassName());
+			saida.append("\n Método de erro : " + e.getStackTrace()[pos].getMethodName());				
+			saida.append("\n Linha de erro : " + e.getStackTrace()[pos].getLineNumber());
+			saida.append("\n Classe : " + e.getClass().getName());
+		}	
+		
+		JOptionPane.showMessageDialog(null, "Erro de conversão de número " + saida.toString());	
+		
+	} catch (NullPointerException e) {
+		
+		JOptionPane.showMessageDialog(null, "Erro de Null pointer exeption " + e.getClass());
+		
+	} catch (Exception e) {/*Captura todas as excessão que não prevemos*/
+		
+		e.printStackTrace();
+		
+		JOptionPane.showMessageDialog(null, "Erro inesperado : " + e.getClass().getName());
+		
+	} 
+	
+	} //fim do while sairdosistema
+		
 	}
 	
 }
