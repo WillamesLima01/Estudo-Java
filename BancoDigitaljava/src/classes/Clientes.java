@@ -4,55 +4,48 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Seguranca.PermitirAcesso;
+import interfaces.PermitirAcesso;
 
 public class Clientes implements PermitirAcesso {
 	
 	private String nomeCompleto;
 	private String nome;
-	private String stilonome;
 	private String datanasc;
 	private String cpf;
 	private String numeroCc;
 	private String usuarioCadastro;
 	private String senhaCadastro;
-	private String senha;
-	private String usuario;	
 	private static String usuarioCliente;
 	private static String senhaAcesso;
-	private int n;	
-	private static int x;	
+	private static int x;
 	private int posLogin;
 	private int posSenha;
-	
+	private String opcaoC;
+	private String posConta;// posição para identificar qual variação de conta vai utilizar no momento
+	private int poscliente;
 		
-	private static String[][]Cliente = new String[10][5];
-	
+	public static String[][]Cliente = new String[10][7];
+
 	ArrayList<String>ClienteDados = new ArrayList<>();
-			
-	
-	
+
+	ContaCorrente contaCorrente = new ContaCorrente();
+	ContaPoupanca contaPoupanca = new ContaPoupanca();
+
 	public void setClientesCadastrados(String ClientesCadastrados) {
-		
-		n = ClienteDados.size();		
+
+		int n = ClienteDados.size();
 						
 		for(int y = 0; y < n; y++) {
-			
 			Cliente[x][y] = ClienteDados.get(y);
-			
-		}		
-		
+		}
 		x++;
-				
 	}	
 	
 	public void setConfirmarAcesso(String usuario, String senha) {
+
+		boolean sair = false;
 		
-		this.usuario = usuario;
-		this.senha = senha;
-		Boolean sair = false;
-		
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 7; i++) {
 			
 			for(int j = 0; j < Cliente[i].length; j++){
 				
@@ -63,9 +56,11 @@ public class Clientes implements PermitirAcesso {
 					break;
 				}
 				if(Cliente[j][posLogin].equals(usuario) && Cliente[j][posSenha].equals(senha)) {
-					
+
 					usuarioCliente = Cliente[j][posLogin];
-					senhaAcesso = Cliente[j][posSenha];	
+					senhaAcesso = Cliente[j][posSenha];
+					contaCorrente.setConta(Cliente[j][3]);
+					contaCorrente.setPosCliente(j);
 					sair = true;
 					break;
 				}
@@ -80,8 +75,24 @@ public class Clientes implements PermitirAcesso {
 		
 		
 	}
-				
-		
+
+	public void buscarTipoDeConta(String varConta){
+		int y = Integer.valueOf(varConta);
+		int x = Integer.valueOf(contaCorrente.getPosCliente());
+		contaCorrente.setVariacao(Cliente[x][y]);
+	}
+	public void Reiniciarlista(){
+		ClienteDados = new ArrayList<>();
+	}
+
+	public String getPosConta() {
+		return posConta;
+	}
+
+	public void setPosConta(String posConta) {
+		this.posConta = posConta;
+	}
+
 	public String getNumeroCc() {
 		return numeroCc;
 	}
@@ -89,6 +100,14 @@ public class Clientes implements PermitirAcesso {
 	public void setNumeroCc(String numeroCc) {
 		this.numeroCc = numeroCc;
 		ClienteDados.add(numeroCc);
+	}
+
+	public String getOpcaoC() {
+		return opcaoC;
+	}
+
+	public void setOpcaoC(String opcaoC) {
+		this.opcaoC = opcaoC;
 	}
 
 	public String getUsuarioCadastro() {
@@ -106,6 +125,13 @@ public class Clientes implements PermitirAcesso {
 
 	public void setSenhaCadastro(String senhaCadastro) {
 		this.senhaCadastro = senhaCadastro;
+		if(this.opcaoC.equals("10")){
+			ClienteDados.add("10");
+			ClienteDados.add("0");
+		} else {
+			ClienteDados.add("0");
+			ClienteDados.add("51");
+		}
 		ClienteDados.add(senhaCadastro);		
 		setClientesCadastrados(senhaCadastro);
 		
@@ -124,6 +150,7 @@ public class Clientes implements PermitirAcesso {
 	}
 
 	public void setNomeCompleto(String nomeCompleto) {
+
 		this.nomeCompleto = nomeCompleto;
 		ClienteDados.add(nomeCompleto);
 		setNome(nomeCompleto);
@@ -140,9 +167,10 @@ public class Clientes implements PermitirAcesso {
 		primeironome = nome.split(" ");
 		
 		int qc = primeironome[0].length();
-		
+
+		String stilonome;
 		if(qc < 4) {
-			//usei uma array dentro da formula para converter as primeiras letras do nome composto
+			//usei uma array dentro da fórmula para converter as primeiras letras do nome composto
 			stilonome = primeironome[0].substring(0, 1).toUpperCase() + primeironome[0].substring(1) +
 					" " + primeironome[1].substring(0, 1).toUpperCase() + primeironome[1].substring(1);
 						
@@ -175,34 +203,42 @@ public class Clientes implements PermitirAcesso {
 	}
 	
 	public String getUsuarioCliente() {
+
 		return usuarioCliente;
 	}
 
 	public void setUsuarioCliente(String usuarioCliente) {
+
 		this.usuarioCliente = usuarioCliente;
 	}
 
 	public String getSenhaAcesso() {
+
 		return senhaAcesso;
 	}
 
 	public void setSenhaAcesso(String senhaAcesso) {
+
 		this.senhaAcesso = senhaAcesso;
 	}	
 
 	public int getPosLogin() {
+
 		return posLogin;
 	}
 
 	public void setPosLogin(int posLogin) {
+
 		this.posLogin = posLogin;
 	}
 
 	public int getPosSenha() {
+
 		return posSenha;
 	}
 
 	public void setPosSenha(int posSenha) {
+
 		this.posSenha = posSenha;
 	}
 

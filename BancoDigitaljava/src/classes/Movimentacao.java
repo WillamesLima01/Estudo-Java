@@ -30,10 +30,9 @@ public class Movimentacao {
 	    
    
 	public String getOpcao() {
-		return opcao;
+
+        return opcao;
 	}
-
-
 
 	public void setOpcao(String opcao) {
 		
@@ -106,7 +105,7 @@ public class Movimentacao {
         return pagamento;
     }
 
-    public void setPagamento(double pagamento) {
+    public void setPagamento(double pagamento) {//feito
         this.saldo -= pagamento;
         JOptionPane.showMessageDialog(null,"Pagamento efetuado com sucesso! Seu novo saldo é de " + (vlr.format(this.saldo)),"Saldo", JOptionPane.INFORMATION_MESSAGE);        
     }
