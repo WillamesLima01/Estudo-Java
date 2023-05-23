@@ -3,14 +3,13 @@ package Executavel;
 import Formatacao.FormatarConta;
 import Formatacao.FormatarCpf;
 import Formatacao.FormatarData;
+import classes.*;
 import interfaces.ConfirmarConta;
 import interfaces.PermitirAcesso;
-import classes.*;
 
 import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -20,10 +19,12 @@ public class App {
 
 		String usuario = " ";
 		boolean sairSistema = true;
-		Random random = new Random();		
+		Random random = new Random();
+
 
 		ContaCorrente contaCorrente = new ContaCorrente();
 		ContaPoupanca contaPoupanca = new ContaPoupanca();
+		Procedimentos procedimentos = new Procedimentos();
 		Clientes clientes = new Clientes();
 		String[] opcoes = {"Conta Corrente","Conta Poupança"};
 
@@ -114,33 +115,13 @@ public class App {
 
 							if(opcao.equals("3")){
 								int opcaoDeposito = JOptionPane.showOptionDialog(null, "Escolha o tipo de conta:", "Tipo de conta", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
-								opcao = String.valueOf(opcaoDeposito);
+								procedimentos.setcontaDeposito(opcaoDeposito);
+							} else {
+								procedimentos.setconfirmarConta(opcao);
 							}
 
 							switch (opcao) {
-								case "1" -> clientes.setPosConta("4");
-								case "5" -> clientes.setPosConta("5");
-							}
-
-							if(clientes.getPosConta()!= null) {
-
-								clientes.buscarTipoDeConta(clientes.getPosConta());
-
-								if (Conta.getVariacao().equals("0") && clientes.getPosConta().equals("4")) {
-									ConfirmarConta conta = new ContaCorrente();
-									if (!conta.confirmar(Conta.getVariacao())) { //A interrogação no início da sentença inverte o resultado
-										contaCorrente.setabrirContaCorrente(Conta.getVariacao());
-									}
-								} else if (Conta.getVariacao().equals("0") && clientes.getPosConta().equals("5")) {
-									ConfirmarConta conta = new ContaPoupanca();
-									if (!conta.confirmar(Conta.getVariacao())) {
-										contaPoupanca.setabrirContaPoupanca(Conta.getVariacao());
-									}
-								}
-							}
-
-							switch (opcao) {
-								case "1" -> {//resolve as transações da conta-corrente
+								case "1" -> {//resolve as transações da conta corrente
 
 									if (contaCorrente.isBloquearCc()) {
 
@@ -358,49 +339,24 @@ public class App {
 									String opcaoCc = "4";
 									String deposito = JOptionPane.showInputDialog(null, "Informe o valor de depósito : ", "Depósito", JOptionPane.INFORMATION_MESSAGE);
 
-									//tipo de conta
-									int opcaoCcCP = JOptionPane.showOptionDialog(null, "Escolha o tipo de conta:", "Tipo de conta", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+										if(Conta.getVariacao().equals("10")) {
 
-									if (opcaoCcCP == 1) {
-
-										if (Conta.getVariacao().equals("0") && clientes.getPosConta().equals("5")) {
-											ConfirmarConta conta = new ContaPoupanca();
-											if (!conta.confirmar(Conta.getVariacao())) {
-												contaPoupanca.setabrirContaPoupanca(Conta.getVariacao());
-											}
-										}
-										/*if (vConta.confirmarCp(clientes.getVarCp())) {//verificar se o cliente tem conta poupança
-
-											contaPoupanca.setSaldo(Double.parseDouble(deposito));
-											contaPoupanca.setSaldoCp(contaPoupanca.getSaldo());
-											movimentacao.setVariacao(51);
-											movimentacao.setOpcao(opcaoCc);
-											extratoCp.add(movimentacao.getDescricaoExtrato());
-
-										} else {
-
-											movimentacao.setabrirContaCorrente(clientes.getVarCc());
-
-										}*/
-
-									} /*else {
-
-										if (vConta.confirmarCc(clientes.getVarCc())) {//verificar se o cliente tem conta corrente
-
-											contaCorrente.setSaldo(Double.parseDouble(deposito));
-											movimentacao.setVariacao(1);
+											contaCorrente.setSaldoCc(Double.parseDouble(deposito));
+											//movimentacao.setVariacao(1);
 											movimentacao.setOpcao(opcaoCc);
 											extratoCc.add(movimentacao.getDescricaoExtrato());
 
 										} else {
+											contaPoupanca.setSaldo(Double.parseDouble(deposito));
+											contaPoupanca.setSaldoCp(contaPoupanca.getSaldo());
+											//movimentacao.setVariacao(51);
+											movimentacao.setOpcao(opcaoCc);
+											//extratoCp.add(movimentacao.getDescricaoExtrato());
 
-											movimentacao.setabrirContaCorrente(clientes.getVarCc());
+										}
 
-										}*/
 
 								}
-
-
 
 								case "4" -> { //opção tranferencia
 

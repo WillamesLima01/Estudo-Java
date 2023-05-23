@@ -10,7 +10,7 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
 
     private Double saldoCp;
     private Double poupanca;
-    private boolean bloquearCp = true;
+    private static boolean bloquearCp;
 
     ArrayList<String> extratoCp = new ArrayList<>();
 
@@ -59,15 +59,18 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
     }
 
     public boolean isBloquearCp() {
+
         return bloquearCp;
     }
 
     public void setBloquearCp(boolean bloquearCp) {
+
         this.bloquearCp = bloquearCp;
     }
 
     @Override
     public Boolean confirmar(String tipoConta) {
+
         return getVariacao().equals("51");
     }
 

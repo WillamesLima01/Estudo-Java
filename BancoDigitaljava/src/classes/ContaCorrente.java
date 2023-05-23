@@ -18,7 +18,7 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
     private String opcao;
     private Date dataAtual;
     private String dataTexto;
-    private boolean bloquearCc = true;
+    private static boolean bloquearCc;
 
     ArrayList<String> extratoCc = new ArrayList<>();
 
@@ -31,6 +31,8 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
     }
     public void setSaldoCc(Double saldoCc) {
         this.saldoCc = saldoCc;
+        this.contaCorrente += this.saldoCc;
+        JOptionPane.showMessageDialog(null, "Seu novo saldo em conta corrente é "+ (vlr.format(this.contaCorrente)),"Saldo", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public Double getSaqueCc() {
