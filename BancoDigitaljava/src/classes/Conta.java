@@ -3,6 +3,7 @@ package classes;
 import java.util.ArrayList;
 public abstract class Conta {
 
+    private String logado;
     private String conta;
     private Double saldo;
     private Double transferencia;
@@ -10,13 +11,22 @@ public abstract class Conta {
     private Double deposito;
     private Double pagamento;
     private static String variacao;
-    private int posCliente;
+    private static int posCliente;
     private String descricaoExtrato;
 
     ArrayList<String> HistoricoConta = new ArrayList<>();
     public Conta() {
 
     }
+
+    public String getLogado() {
+        return logado;
+    }
+
+    public void setLogado(String logado) {
+        this.logado = logado;
+    }
+
     public static String getVariacao() {
         return variacao;
     }
@@ -24,13 +34,12 @@ public abstract class Conta {
         Conta.variacao = variacao;
     }
 
-    public int getPosCliente() {
+    public static int getPosCliente() {
         return posCliente;
     }
 
-    public void setPosCliente(int posCliente) {
-
-        this.posCliente = posCliente;
+    public static void setPosCliente(int posCliente) {
+        Conta.posCliente = posCliente;
     }
 
     public String getConta() {

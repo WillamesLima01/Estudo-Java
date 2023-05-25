@@ -79,7 +79,7 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
 
         if(resposta1 == 0) {
             int posCliente = getPosCliente();
-            clientes.Cliente[getPosCliente()][4]="10";
+           // clientes.Cliente[getPosCliente()][4]="10";
             setVariacao("10");
             JOptionPane.showMessageDialog(null, "Abertura de conta corrente realizada com sucesso!", "Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
             bloquearCc=true;
@@ -88,6 +88,7 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
         }
     }
     public Date getDataAtual() {
+
         return dataAtual;
     }
     public void setDataAtual(Date dataAtual) {
@@ -106,22 +107,16 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
         setDataAtual(dataAtual);
 
         switch (opcao) {
-            case "1":
-                setDescricaoExtrato("Operação Saldo ; "+"Cc Var:10 ; "+"Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.contaCorrente)));
-                break;
-            case "2":
-                setDescricaoExtrato("Operação Extrato ; "+ this.dataTexto + ";  Valor  " + (vlr.format(this.saldoCc)));
-                break;
-            case "3":
-                setDescricaoExtrato("Operação Saque ; "+"Cc Var:10 ; "+"Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(getSaque())));
-                break;
-            case "4":
-                setDescricaoExtrato("Operação Depósito ; "+"Cc Var:10 ; "+"Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.getDeposito())));
-                break;
-            case "5":
-                setDescricaoExtrato("Operação Transferência ; "+ this.dataTexto + "; Conta beneficiada : " + getTransferencia() + "; Valor " + (vlr.format(this.getTransferencia())));
-                break;
-
+            case "1" ->
+                    setDescricaoExtrato("Operação Saldo ; " + "Cc Var:10 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.contaCorrente)));
+            case "2" ->
+                    setDescricaoExtrato("Operação Extrato ; " + this.dataTexto + ";  Valor  " + (vlr.format(this.saldoCc)));
+            case "3" ->
+                    setDescricaoExtrato("Operação Saque ; " + "Cc Var:10 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(getSaque())));
+            case "4" ->
+                    setDescricaoExtrato("Operação Depósito ; " + "Cc Var:10 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.getDeposito())));
+            case "5" ->
+                    setDescricaoExtrato("Operação Transferência ; " + this.dataTexto + "; Conta beneficiada : " + getTransferencia() + "; Valor " + (vlr.format(this.getTransferencia())));
         }
     }
 

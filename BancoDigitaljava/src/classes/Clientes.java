@@ -2,8 +2,6 @@ package classes;
 
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import interfaces.PermitirAcesso;
 
 public class Clientes implements PermitirAcesso {
@@ -12,148 +10,37 @@ public class Clientes implements PermitirAcesso {
 	private String nome;
 	private String datanasc;
 	private String cpf;
-	private String numeroCc;
-	private String usuarioCadastro;
-	private String senhaCadastro;
-	private static String usuarioCliente;
-	private static String senhaAcesso;
-	private static int x;
-	private int posLogin;
-	private int posSenha;
-	private String opcaoC;
-	private String posConta;// posição para identificar qual variação de conta vai utilizar no momento
-	private int poscliente;
-		
-	public static String[][]Cliente = new String[10][7];
+	private String conta;
+	private String email;
+	private int varCc;
+	private int varCp;
+	private String senha;
 
-	ArrayList<String>ClienteDados = new ArrayList<>();
+	private static ArrayList<Clientes> listaClientes = new ArrayList<>();
 
-	ContaCorrente contaCorrente = new ContaCorrente();
-	ContaPoupanca contaPoupanca = new ContaPoupanca();
+	public Clientes(){
 
-	public void setClientesCadastrados(String ClientesCadastrados) {
-
-		int n = ClienteDados.size();
-						
-		for(int y = 0; y < n; y++) {
-			Cliente[x][y] = ClienteDados.get(y);
-		}
-		x++;
-	}	
-	
-	public void setConfirmarAcesso(String usuario, String senha) {
-
-		boolean sair = false;
-		
-		for(int i = 0; i < 7; i++) {
-			
-			for(int j = 0; j < Cliente[i].length; j++){
-				
-				if(Cliente[j][0] == null) {
-					
-					JOptionPane.showMessageDialog(null, "Dados não encontrados no banco de dados!","ATENÇÃO!", JOptionPane.INFORMATION_MESSAGE);
-					sair = true;
-					break;
-				}
-				if(Cliente[j][posLogin].equals(usuario) && Cliente[j][posSenha].equals(senha)) {
-
-					usuarioCliente = Cliente[j][posLogin];
-					senhaAcesso = Cliente[j][posSenha];
-					contaCorrente.setConta(Cliente[j][3]);
-					contaCorrente.setPosCliente(j);
-					sair = true;
-					break;
-				}
-			}			
-			
-			if(sair) {
-				
-				break;
-				
-			}
-		}	
-		
-		
+	}
+	public Clientes(String nomeCompleto, String nome, String datanasc, String cpf, String conta, String email,
+					int varCc, int varCp, String senha) {
+		this.nomeCompleto = nomeCompleto;
+		this.nome = nome;
+		this.datanasc = datanasc;
+		this.cpf = cpf;
+		this.conta = conta;
+		this.email = email;
+		this.varCc = varCc;
+		this.varCp = varCp;
+		this.senha = senha;
+		listaClientes.add(this);
 	}
 
-	public void buscarTipoDeConta(String varConta){
-		int y = Integer.valueOf(varConta);
-		int x = Integer.valueOf(contaCorrente.getPosCliente());
-		contaCorrente.setVariacao(Cliente[x][y]);
-	}
-	public void Reiniciarlista(){
-		ClienteDados = new ArrayList<>();
-	}
-
-	public String getPosConta() {
-		return posConta;
-	}
-
-	public void setPosConta(String posConta) {
-		this.posConta = posConta;
-	}
-
-	public String getNumeroCc() {
-		return numeroCc;
-	}
-
-	public void setNumeroCc(String numeroCc) {
-		this.numeroCc = numeroCc;
-		ClienteDados.add(numeroCc);
-	}
-
-	public String getOpcaoC() {
-		return opcaoC;
-	}
-
-	public void setOpcaoC(String opcaoC) {
-		this.opcaoC = opcaoC;
-	}
-
-	public String getUsuarioCadastro() {
-		return usuarioCadastro;
-	}
-
-	public void setUsuarioCadastro(String usuarioCadastro) {
-		this.usuarioCadastro = usuarioCadastro;
-		ClienteDados.add(usuarioCadastro);
-	}
-
-	public String getSenhaCadastro() {
-		return senhaCadastro;
-	}
-
-	public void setSenhaCadastro(String senhaCadastro) {
-		this.senhaCadastro = senhaCadastro;
-		if(this.opcaoC.equals("10")){
-			ClienteDados.add("10");
-			ClienteDados.add("0");
-		} else {
-			ClienteDados.add("0");
-			ClienteDados.add("51");
-		}
-		ClienteDados.add(senhaCadastro);		
-		setClientesCadastrados(senhaCadastro);
-		
-	}	
-	
-	public ArrayList<String> getClienteDados() {
-		return ClienteDados;
-	}
-
-	public void setClienteDados(ArrayList<String> clienteDados) {
-		ClienteDados = clienteDados;
-	}
-	
 	public String getNomeCompleto() {
 		return nomeCompleto;
 	}
 
 	public void setNomeCompleto(String nomeCompleto) {
-
 		this.nomeCompleto = nomeCompleto;
-		ClienteDados.add(nomeCompleto);
-		setNome(nomeCompleto);
 	}
 
 	public String getNome() {
@@ -161,27 +48,7 @@ public class Clientes implements PermitirAcesso {
 	}
 
 	public void setNome(String nome) {
-		
-		String[] primeironome;			
-		
-		primeironome = nome.split(" ");
-		
-		int qc = primeironome[0].length();
-
-		String stilonome;
-		if(qc < 4) {
-			//usei uma array dentro da fórmula para converter as primeiras letras do nome composto
-			stilonome = primeironome[0].substring(0, 1).toUpperCase() + primeironome[0].substring(1) +
-					" " + primeironome[1].substring(0, 1).toUpperCase() + primeironome[1].substring(1);
-						
-		} else {
-			
-			stilonome = primeironome[0];
-			stilonome = stilonome.substring(0, 1).toUpperCase() + stilonome.substring(1);
-		}		
-				
-		this.nome = stilonome;
-		
+		this.nome = nome;
 	}
 
 	public String getDatanasc() {
@@ -190,7 +57,6 @@ public class Clientes implements PermitirAcesso {
 
 	public void setDatanasc(String datanasc) {
 		this.datanasc = datanasc;
-		ClienteDados.add(datanasc);
 	}
 
 	public String getCpf() {
@@ -199,54 +65,76 @@ public class Clientes implements PermitirAcesso {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-		ClienteDados.add(cpf);
-	}
-	
-	public String getUsuarioCliente() {
-
-		return usuarioCliente;
 	}
 
-	public void setUsuarioCliente(String usuarioCliente) {
-
-		this.usuarioCliente = usuarioCliente;
+	public String getConta() {
+		return conta;
 	}
 
-	public String getSenhaAcesso() {
-
-		return senhaAcesso;
+	public void setConta(String conta) {
+		this.conta = conta;
 	}
 
-	public void setSenhaAcesso(String senhaAcesso) {
-
-		this.senhaAcesso = senhaAcesso;
-	}	
-
-	public int getPosLogin() {
-
-		return posLogin;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setPosLogin(int posLogin) {
-
-		this.posLogin = posLogin;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public int getPosSenha() {
-
-		return posSenha;
+	public int getVarCc() {
+		return varCc;
 	}
 
-	public void setPosSenha(int posSenha) {
+	public void setVarCc(int varCc) {
+		this.varCc = varCc;
+	}
 
-		this.posSenha = posSenha;
+	public int getVarCp() {
+		return varCp;
+	}
+
+	public void setVarCp(int varCp) {
+		this.varCp = varCp;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public static ArrayList<Clientes> getListaClientes() {
+		return listaClientes;
+	}
+	public static void adicionarCliente(Clientes cliente) {
+		listaClientes.add(cliente);
 	}
 
 
 	@Override
 	public Boolean validar(String usuario, String senha) {// validar login e senha
-		
-		return this.usuarioCliente.equals(usuario) && this.senhaAcesso.equals(senha);
-		
+
+		boolean permissao = false;
+
+		for (Clientes cliente : listaClientes) {
+			if (cliente.getDatanasc().equals(usuario) && cliente.getSenha().equals(senha)) {
+				permissao=true;
+				break;
+			} else if (cliente.getCpf().equals(usuario) && cliente.getSenha().equals(senha)) {
+				permissao=true;
+				break;
+			} else if (cliente.getConta().equals(usuario) && cliente.getSenha().equals(senha)) {
+				permissao=true;
+				break;
+			}
+			// outros atributos e métodos que você deseja acessar
+		}
+
+		return permissao;
+
 	}
 }
