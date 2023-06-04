@@ -5,6 +5,7 @@ import Formatacao.FormatarCpf;
 import Formatacao.FormatarData;
 import Formatacao.FormatarNome;
 import entidades.*;
+import interfaces.ConfirmarConta;
 import interfaces.PermitirAcesso;
 
 import javax.swing.*;
@@ -26,8 +27,6 @@ public class App {
 
         ContaCorrente contaCorrente = new ContaCorrente();
         ContaPoupanca contaPoupanca = new ContaPoupanca();
-        Procedimentos procedimentos = new Procedimentos();
-        //Clientes clientes = new Clientes();
 
         Map<String, List<Clientes>> cliente = new HashMap<>();
 
@@ -175,6 +174,8 @@ public class App {
 
                     if (clienteLogado != null && pAcesso.validar(senha, clienteLogado.getSenha())) {//Validar senha pois o login já é feito no cliente encontrado
 
+                        Conta.setLogado(clienteLogado.getNome());
+
                         if(clienteLogado.getVarCc()==10){
                             Conta.setVariacao(clienteLogado.getVarCc());
                         } else if(clienteLogado.getVarCp()==51){
@@ -204,56 +205,59 @@ public class App {
                                 break;
                             }
 
-                            String varConta = " ";
-
-                            if(opcao.equals("3")){//confirmar se o cliente tem a conta de depósito
-
-                                int opcaoDeposito = JOptionPane.showOptionDialog(null, "Escolha o tipo de conta:", "Tipo de conta", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
-
-                                switch (opcaoDeposito){
-                                    case 0 -> {
-                                        assert clienteLogado != null;
-                                        contaCorrente.setBloquearCc(clienteLogado.getVarCc() == 10);
-                                        Conta.setVariacao(clienteLogado.getVarCc());
-                                        varConta="10";
-                                    }
-                                    case 1 -> {
-                                        assert clienteLogado != null;
-                                        contaPoupanca.setBloquearCp(clienteLogado.getVarCp() == 51);
-                                        Conta.setVariacao(clienteLogado.getVarCp());
-                                        varConta="51";
-                                    }
-                                }
-                            }
+                            String varConta="";
 
                             switch (opcao){
                                 case "1" -> {
                                     varConta = "10";
                                     contaCorrente.setBloquearCc(true);
                                 }
+                                case "3" -> {
+                                    int opcaoDeposito = JOptionPane.showOptionDialog(null, "Escolha o tipo de conta:", "Tipo de conta", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+
+                                    switch (opcaoDeposito){
+                                        case 0 -> {
+                                            assert clienteLogado != null;
+                                            contaCorrente.setBloquearCc(clienteLogado.getVarCc() == 10);
+                                            //Conta.setVariacao(clienteLogado.getVarCc());
+                                            varConta="10";
+                                        }
+                                        case 1 -> {
+                                            assert clienteLogado != null;
+                                            contaPoupanca.setBloquearCp(clienteLogado.getVarCp() == 51);
+                                            //Conta.setVariacao(clienteLogado.getVarCp());
+                                            varConta="51";
+                                        }
+                                    }
+                                }
                                 case "5" -> {
                                     varConta = "51";
                                     contaPoupanca.setBloquearCp(true);
                                 }
+                                case "4" -> varConta = String.valueOf(Conta.getVariacao());
                             }
 
                             String[]opcaoC = {"Sim", "Não"};//verificar se o cliente tem as contas
+                            ConfirmarConta contaC = new ContaCorrente();
+                            ConfirmarConta contaP = new ContaPoupanca();
 
                             assert clienteLogado != null;
-                            if(clienteLogado.getVarCc()==0 && varConta.equals("10")){
+                            if(clienteLogado.getVarCc()==0 && !contaC.confirmar(varConta)){
 
                                 int resposta1 = JOptionPane.showOptionDialog(null, "Pesquisando no banco de dados verificamos que você não tem a conta corrente.\n"+"Deseja abrir a conta agora?","Criar Conta Corrente", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcaoC, opcaoC[0]);
                                 if(resposta1==0){
                                     clienteLogado = abrirContaCorrente(cliente, varConta);
+                                    contaCorrente.setBloquearCc(true);
                                 } else{
                                     contaCorrente.setBloquearCc(false);
                                 }
 
-                            } else if(clienteLogado.getVarCp()==0 && varConta.equals("51")){
+                            } else if(clienteLogado.getVarCp()==0 && !contaP.confirmar(varConta)){
 
                                 int resposta1 = JOptionPane.showOptionDialog(null, "Pesquisando no banco de dados verificamos que você não tem a conta poupança.\n"+"Deseja abrir a conta agora?","Criar Conta Poupança", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcaoC, opcaoC[0]);
                                 if(resposta1==0){
                                     clienteLogado = abrirContaPoupanca(cliente, varConta);
+                                    contaPoupanca.setBloquearCp(true);
                                 } else{
                                     contaPoupanca.setBloquearCp(false);
                                 }
@@ -299,47 +303,59 @@ public class App {
                                                     sb.append(imprimir[i][0]).append("<br><hr>");
 
                                                 }
+
                                                 JOptionPane.showMessageDialog(null, "<html>" + sb + "<html>", "Extrato", JOptionPane.INFORMATION_MESSAGE);//imprimir o extrato organizado .toString()
+
                                             }
                                             case "3" -> {
+
                                                 String saque = JOptionPane.showInputDialog(null, "Informe o valor desejado para o saque :", "Saque conta corrente", JOptionPane.INFORMATION_MESSAGE);
-                                                contaCorrente.setSaque(Double.parseDouble(saque));
-                                                contaCorrente.setSaqueCc(contaCorrente.getSaque());
-                                                contaCorrente.setOpcao(opcaoCc);
-                                                extratoCc.add(contaCorrente.getDescricaoExtrato());
+
+                                                String senhaPermissao = JOptionPane.showInputDialog(null, "Informe senha para liberar saque : ", "Segurança", JOptionPane.INFORMATION_MESSAGE);
+
+                                                assert clienteLogado != null;
+                                                if (pAcesso.validar(senhaPermissao, clienteLogado.getSenha())) {
+
+                                                    contaCorrente.setSaque(Double.parseDouble(saque));
+                                                    contaCorrente.setSaqueCc(contaCorrente.getSaque());
+                                                    contaCorrente.setOpcao(opcaoCc);
+                                                    extratoCc.add(contaCorrente.getDescricaoExtrato());
+
+                                                } else {
+
+                                                    JOptionPane.showMessageDialog(null, "ATENÇÃO!!! Senha inválida!", "Segurança - autenticação", JOptionPane.INFORMATION_MESSAGE);
+
+                                                }
                                             }
                                         }
                                     }
                                 }
                                 case "2" -> { //resolve as transações de cartão de crédito
 
-                                    String opCartao = JOptionPane.showInputDialog("""
+                                    String opCartao = JOptionPane.showInputDialog(null,"""
 											O que deseja realizar :
 											1- Limite de crédito
 											2- Saldo disponível
 											3- Data de vencimento
 											4- Histórico de compra
 											5- Comprar com cartão
-											6- sair""");
+											6- sair""","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
 
                                     switch (opCartao) {
                                         case "1": //Opção limite de crédito
 
-                                            String opCartao1 = JOptionPane.showInputDialog("""
-													- Limite de crédito
-													-------------------------------
-													O que deseja realizar :
-													1- Aumentar Limite de crédito
-													2- Consultar limite de crédito
-													-------------------------------""");
+                                            String opCartao1 = JOptionPane.showInputDialog(null, """
+                                                    - Limite de crédito -\s
+                                                    O que deseja realizar :
+                                                    1- Aumentar Limite de crédito
+                                                    2- Consultar limite de crédito
+                                                    ""","Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
 
                                             if (opCartao1.equals("1")) {
 
-                                                String aumentolimitecar = JOptionPane.showInputDialog("""
-														- Limite de crédito
-														---------------------------------------------------------
-														Informe o valor desejado de acréscimo
-														---------------------------------------------------------""");
+                                                String aumentolimitecar = JOptionPane.showInputDialog(null, """
+                                                        - Limite de crédito -
+                                                        Informe o valor desejado de acréscimo""", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
 
                                                 cartaoCredito.setAumentolimite(Double.parseDouble(aumentolimitecar));
                                                 cartaoCredito.setLimiteCredito(cartaoCredito.getAumentolimite());
@@ -401,7 +417,7 @@ public class App {
 
                                             String entrada = "";
                                             int cancelar = 0;
-                                            boolean continuar = true;
+                                            boolean continuar = false;
 
                                             while (entrada.equals("")) {
 
@@ -416,8 +432,8 @@ public class App {
 
                                                 } else {
 
-                                                    continuar = false;
-                                                    String valorCompra = JOptionPane.showInputDialog(null, "Informe o valor da compra : \n" + "Limite para compra R$ " + cartaoCredito.getSaldoDiponivel(), "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+                                                    continuar = true;
+                                                    String valorCompra = JOptionPane.showInputDialog(null, "Informe o valor da compra : \n" + "Limite para compra " + vlr.format(cartaoCredito.getSaldoDiponivel()), "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
                                                     String localCompra = JOptionPane.showInputDialog(null, "Informe o nome da loja ou estabelecimento : ", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
                                                     String dataCompra = JOptionPane.showInputDialog(null, "Digite a data da compra : (ex: 01011001) ", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
 
@@ -429,7 +445,11 @@ public class App {
 
                                                     if (alterardados == 1) {
 
-                                                        String opcaodados = JOptionPane.showInputDialog(null, "Informe a opção que deseja alterar dados :\n 1 - Valor da compra; 2 - Local da compra; 3 - Data da compra", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+                                                        String opcaodados = JOptionPane.showInputDialog(null, """
+                                                                Informe a opção que deseja alterar dados :
+                                                                1 - Valor da compra;
+                                                                2 - Local da compra;
+                                                                3 - Data da compra""", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
 
                                                         switch (opcaodados) {
                                                             case "1" ->
@@ -440,13 +460,15 @@ public class App {
                                                                     dataCompra = JOptionPane.showInputDialog(null, "Digite a data da compra : (ex: 01011001) ", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
                                                             default ->
                                                                     JOptionPane.showMessageDialog(null, "Opção escolhida não confere com a mensagem!", "Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+
                                                         }
 
                                                     } else {
 
                                                         String senhaPermissao = JOptionPane.showInputDialog(null, "Informe senha para liberar comprar : ", "Segurança", JOptionPane.INFORMATION_MESSAGE);
 
-														/*if (clientes.getSenhaAcesso().equals(senhaPermissao)) {
+                                                        assert clienteLogado != null;
+                                                        if (pAcesso.validar(senhaPermissao, clienteLogado.getSenha())) {
 
 															cartaoCredito.setValorCompra(valorCompra);
 															cartaoCredito.setLocalCompra(localCompra);
@@ -459,7 +481,7 @@ public class App {
 															JOptionPane.showMessageDialog(null, "ATENÇÃO!!! Senha inválida!", "Segurança - autenticação", JOptionPane.INFORMATION_MESSAGE);
 															break;
 
-														}*/
+														}
 
                                                     }
 
@@ -493,7 +515,7 @@ public class App {
 
                                         contaPoupanca.setDeposito(Double.parseDouble(deposito));
                                         contaPoupanca.setSaldoCp(contaPoupanca.getDeposito());
-                                        contaPoupanca.setOpcao("4");
+                                        contaPoupanca.setOpcao("5");
                                         extratoCP.add(contaPoupanca.getDescricaoExtrato());
                                         contaPoupanca.setBloquearCp(false);
                                     }
@@ -502,13 +524,35 @@ public class App {
 
                                 case "4" -> { //opção tranferencia
 
-                                    String opcaoCc = "5";
+                                    //String opcaoCc = "5";
+                                    int tipoDeConta = JOptionPane.showOptionDialog(null, "Deseja transferir da conta:", "Tipo de conta", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
                                     String contaTransferencia = JOptionPane.showInputDialog(null, "Informe a conta de destino : ", "Tranferência", JOptionPane.INFORMATION_MESSAGE);
                                     String transferencia = JOptionPane.showInputDialog(null, "Informe o valor de transferência : ", "Transferência", JOptionPane.INFORMATION_MESSAGE);
-                                    //movimentacao.setTransferencia(Double.parseDouble(transferencia), contaTransferencia);
-                                    //movimentacao.setOpcao(opcaoCc);
-                                    //extratoCc.add(movimentacao.getDescricaoExtrato());
 
+                                    String senhaPermissao = JOptionPane.showInputDialog(null, "Informe senha para liberar transferência : ", "Segurança", JOptionPane.INFORMATION_MESSAGE);
+
+                                    assert clienteLogado != null;
+                                    if (pAcesso.validar(senhaPermissao, clienteLogado.getSenha())) {
+
+                                        if(tipoDeConta == 0){
+                                            contaCorrente.setTransferencia(Double.parseDouble(transferencia));
+                                            contaCorrente.settransferenciaCc(contaCorrente.getTransferencia());
+                                            contaCorrente.setContaDestino(contaTransferencia);
+                                            contaCorrente.setOpcao(opcao);
+                                            extratoCc.add(contaCorrente.getDescricaoExtrato());
+                                        }else{
+                                            contaPoupanca.setTransferencia(Double.parseDouble(transferencia));
+                                            contaPoupanca.settransferenciaCp(contaPoupanca.getTransferencia());
+                                            contaPoupanca.setContaDestino(contaTransferencia);
+                                            contaPoupanca.setOpcao(opcao);
+                                            extratoCP.add(contaPoupanca.getDescricaoExtrato());
+                                        }
+
+                                    } else {
+
+                                        JOptionPane.showMessageDialog(null, "ATENÇÃO!!! Senha inválida!", "Segurança - autenticação", JOptionPane.INFORMATION_MESSAGE);
+
+                                    }
                                 }
                                 case "5" -> { //opção conta poupança
 
@@ -517,7 +561,8 @@ public class App {
 												Escolha a opcção :
 												1- Saldo
 												2- Extrato
-												3- Saques""", "Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
+												3- Saques
+												4- Consultar rendimento""", "Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
 
                                         if (opcaoCp == null) continue;
 
@@ -552,9 +597,29 @@ public class App {
                                                 JOptionPane.showMessageDialog(null, "<html>" + sb + "<html>", "Extrato", JOptionPane.INFORMATION_MESSAGE);//imprimir o extrato organizado
                                             }
                                             case "3" -> {
-                                                String saque = JOptionPane.showInputDialog(null, "Informe o valor desejado para o saque :", "Saque conta corrente", JOptionPane.INFORMATION_MESSAGE);
-                                                contaPoupanca.setSaque(Double.parseDouble(saque));
-                                                contaPoupanca.setSaqueCp(contaPoupanca.getSaque());
+
+                                                String saque = JOptionPane.showInputDialog(null, "Informe o valor desejado para o saque :", "Saque conta poupança", JOptionPane.INFORMATION_MESSAGE);
+
+                                                String senhaPermissao = JOptionPane.showInputDialog(null, "Informe senha para liberar saque : ", "Segurança", JOptionPane.INFORMATION_MESSAGE);
+
+                                                assert clienteLogado != null;
+                                                if (pAcesso.validar(senhaPermissao, clienteLogado.getSenha())) {
+
+                                                    contaPoupanca.setSaque(Double.parseDouble(saque));
+                                                    contaPoupanca.setSaqueCp(contaPoupanca.getSaque());
+                                                    contaPoupanca.setOpcao(opcaoCp);
+                                                    extratoCP.add(contaPoupanca.getDescricaoExtrato());
+
+                                                } else {
+
+                                                    JOptionPane.showMessageDialog(null, "ATENÇÃO!!! Senha inválida!", "Segurança - autenticação", JOptionPane.INFORMATION_MESSAGE);
+
+                                                }
+
+                                            }
+                                            case "4" -> {
+                                                Double redimento = contaPoupanca.getRendimentoPoupanca();
+                                                JOptionPane.showMessageDialog(null, "Seu saldo em conta poupança com rendimento é de "+ (vlr.format(redimento)),"Redimento Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
                                                 contaPoupanca.setOpcao(opcaoCp);
                                                 extratoCP.add(contaPoupanca.getDescricaoExtrato());
                                             }

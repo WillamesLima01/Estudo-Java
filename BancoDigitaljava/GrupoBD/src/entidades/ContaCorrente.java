@@ -16,11 +16,9 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
     private Double saldoCc = 0.0;
     private Double contaCorrente = 0.0;
     private double limiteChequeEspecial;
-    private Double saqueCc;
-    private String opcao;
-    private Date dataAtual;
     private String dataTexto;
     private static boolean bloquearCc;
+    private String contaDestino;
 
     ArrayList<String> extratoCc = new ArrayList<>();
 
@@ -30,32 +28,22 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
 
     }
 
-    public Double getSaldoCc() {
-
-        return saldoCc;
-    }
-
     public void setSaldoCc(Double saldoCc) {
         this.saldoCc = saldoCc;
         this.contaCorrente += this.saldoCc;
         JOptionPane.showMessageDialog(null, "Seu novo saldo em conta corrente é "+ (vlr.format(this.contaCorrente)),"Saldo", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public Double getSaqueCc() {
-
-        return saqueCc;
-    }
-
     public void setSaqueCc(Double saqueCc) {
         if (saqueCc <= this.contaCorrente) {
             this.contaCorrente -= saqueCc;
             setSaldo(this.contaCorrente);
-
-            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(getSaldo())),"Saque", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Saque no valor de "+ (vlr.format(saqueCc) +" realizado com sucesso"),"Saque Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(getSaldo())),"Saldo Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
 
-            JOptionPane.showMessageDialog(null, "Saldo insuficiente!","Saldo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Saldo insuficiente!","Saldo Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
 
         }
     }
@@ -64,9 +52,13 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
 
         return contaCorrente;
     }
-    public void setContaCorrente(Double contaCorrente) {
 
-        this.contaCorrente = contaCorrente;
+    public String getContaDestino() {
+        return contaDestino;
+    }
+
+    public void setContaDestino(String contaDestino) {
+        this.contaDestino = contaDestino;
     }
 
     public double getLimiteChequeEspecial() {
@@ -77,26 +69,7 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
 
         this.limiteChequeEspecial = limiteChequeEspecial;
     }
-    public void setabrirContaCorrente(String varCc){
-        Clientes clientes = new Clientes();
 
-        String[]opcao = {"Sim", "Não"};
-        int resposta1 = JOptionPane.showOptionDialog(null, "Pesquisando no banco de dados verificamos que você não tem a conta corrente.\n"+"Deseja abrir a conta agora?","Criar Conta Corrente", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcao, opcao[0]);
-
-        if(resposta1 == 0) {
-            int posCliente = getPosCliente();
-            // clientes.Cliente[getPosCliente()][4]="10";
-            setVariacao(10);
-            JOptionPane.showMessageDialog(null, "Abertura de conta corrente realizada com sucesso!", "Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
-            bloquearCc=true;
-        } else {
-            bloquearCc=false;
-        }
-    }
-    public Date getDataAtual() {
-
-        return dataAtual;
-    }
     public void setDataAtual(Date dataAtual) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         this.dataTexto = dateFormat.format(dataAtual);
@@ -116,12 +89,21 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
                 if (cliente.getVarCc() == 0) {
                     cliente.setVarCc(Integer.parseInt(varConta));
                     Conta.setVariacao(Integer.parseInt(varConta));
-                    JOptionPane.showMessageDialog(null, "Abertura de conta corrente realizada com sucesso!", "Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Abertura de conta corrente realizada com sucesso senhor(a) "+cliente.getNome()+"! ", "Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
                     return cliente;
                 }
             }
         }
         return null; // Cliente não encontrado
+    }
+
+    public void settransferenciaCc(Double transferencia){
+        if(contaCorrente >= transferencia) {
+            contaCorrente -= transferencia;
+            JOptionPane.showMessageDialog(null, "Transferência realizada com sucesso senhor(a) " + getLogado(), "Transferência Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Saldo em conta corrente insuficiente!", "Transferência Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public void setOpcao(String opcao) {
@@ -139,13 +121,15 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
             case "4" ->
                     setDescricaoExtrato("Operação Depósito ; " + "Cc Var:10 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.getDeposito())));
             case "5" ->
-                    setDescricaoExtrato("Operação Transferência ; " + this.dataTexto + "; Conta beneficiada : " + getTransferencia() + "; Valor " + (vlr.format(this.getTransferencia())));
+                    setDescricaoExtrato("Operação Transferência ; " + this.dataTexto + "; Conta beneficiada : " + getContaDestino() + "; Valor " + (vlr.format(this.getTransferencia())));
         }
     }
 
     @Override
     public Boolean confirmar(String tipoConta) {
-        return (getVariacao()==10);
+
+        return (getVariacao()==Integer.parseInt(tipoConta));
+
     }
 
 }

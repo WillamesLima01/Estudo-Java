@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Conta {
 
-    private String logado;
+    private static String logado;
     private String conta;
     private Double saldo;
     private Double transferencia;
@@ -12,7 +12,6 @@ public abstract class Conta {
     private Double deposito;
     private Double pagamento;
     private static int variacao;
-    private static int posCliente;
     private String descricaoExtrato;
 
     ArrayList<String> HistoricoConta = new ArrayList<>();
@@ -21,14 +20,14 @@ public abstract class Conta {
 
     }
 
-    public String getLogado() {
+    public static String getLogado() {
 
         return logado;
     }
 
-    public void setLogado(String logado) {
+    public static void setLogado(String logado) {
 
-        this.logado = logado;
+        Conta.logado = logado;
     }
 
     public static int getVariacao() {
@@ -37,16 +36,6 @@ public abstract class Conta {
 
     public static void setVariacao(int variacao) {
         Conta.variacao = variacao;
-    }
-
-    public static int getPosCliente() {
-
-        return posCliente;
-    }
-
-    public static void setPosCliente(int posCliente) {
-
-        Conta.posCliente = posCliente;
     }
 
     public String getConta() {
