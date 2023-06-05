@@ -2,7 +2,6 @@ package entidades;
 
 import interfaces.PermitirAcesso;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,10 @@ public class Clientes implements PermitirAcesso {
     private String cpf;
     private String conta;
     private String email;
+    private String contato;
     private int varCc;
     private int varCp;
+    private int varCi;
     private String senha;
 
     private static final ArrayList<Clientes> listaClientes = new ArrayList<>();
@@ -25,23 +26,19 @@ public class Clientes implements PermitirAcesso {
 
     }
 
-    public Clientes(String nomeCompleto, String nome, String datanasc, String cpf, String conta, String email,
-                    int varCc, int varCp, String senha) {
+    public Clientes(String nomeCompleto, String nome, String datanasc, String cpf, String conta, String email, String contato, int varCc, int varCp, int varCi, String senha) {
         this.nomeCompleto = nomeCompleto;
         this.nome = nome;
         this.datanasc = datanasc;
         this.cpf = cpf;
         this.conta = conta;
         this.email = email;
+        this.contato = contato;
         this.varCc = varCc;
         this.varCp = varCp;
+        this.varCi = varCi;
         this.senha = senha;
         listaClientes.add(this);
-    }
-
-    public String getNomeCompleto() {
-
-        return nomeCompleto;
     }
 
     public void setNomeCompleto(String nomeCompleto) {
@@ -99,6 +96,14 @@ public class Clientes implements PermitirAcesso {
         this.email = email;
     }
 
+    public String getContato() {
+        return contato;
+    }
+
+    public void setContato(String contato) {
+        this.contato = contato;
+    }
+
     public int getVarCc() {
 
         return varCc;
@@ -117,6 +122,14 @@ public class Clientes implements PermitirAcesso {
     public void setVarCp(int varCp) {
 
         this.varCp = varCp;
+    }
+
+    public int getVarCi() {
+        return varCi;
+    }
+
+    public void setVarCi(int varCi) {
+        this.varCi = varCi;
     }
 
     public String getSenha() {

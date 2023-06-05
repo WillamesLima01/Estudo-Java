@@ -1,9 +1,6 @@
 package aplication;
 
-import Formatacao.FormatarConta;
-import Formatacao.FormatarCpf;
-import Formatacao.FormatarData;
-import Formatacao.FormatarNome;
+import Formatacao.*;
 import entidades.*;
 import interfaces.ConfirmarConta;
 import interfaces.PermitirAcesso;
@@ -27,14 +24,13 @@ public class App {
 
         ContaCorrente contaCorrente = new ContaCorrente();
         ContaPoupanca contaPoupanca = new ContaPoupanca();
+        ContaInvestimento contaInvestimento = new ContaInvestimento();
 
         Map<String, List<Clientes>> cliente = new HashMap<>();
 
         Scanner scanner = new Scanner(System.in);
 
-        String[] opcoes = {"Conta Corrente","Conta Poupança"};
-
-        //ArrayList<Clientes> ListaCliente = new ArrayList<>();
+        String[] opcoes = {"Conta Corrente","Conta Poupança", "Conta Investimento"};
 
         while (sairSistema) {
 
@@ -52,16 +48,19 @@ public class App {
 
                         int varCc = 0;
                         int varCp = 0;
+                        int varCi = 0;
 
                         switch (opcaoC){
                             case 0 -> varCc = 10;
                             case 1 -> varCp = 51;
+                            case 2 -> varCi = 61;
                         }
 
                         String nomeCompleto = JOptionPane.showInputDialog(null,"Informe o nome completo do usuário : ","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
                         String dataNascimento = JOptionPane.showInputDialog(null,"Informe a data de nascimeto : \n"+"Ex.: 01011001","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
                         String cpf = JOptionPane.showInputDialog(null,"Informe o CPF : \n"+"Ex.: 12345678910","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
                         String email = JOptionPane.showInputDialog(null,"Informe e-mail : \n","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
+                        String contato = JOptionPane.showInputDialog(null,"Informe um número para contato : \n","Banco Digital", JOptionPane.INFORMATION_MESSAGE);
 
                         int numerogerado = random.nextInt(90000) + 10000; // gera um número aleatório entre 1000 e 9999
 
@@ -69,6 +68,7 @@ public class App {
                         FormatarData formatarData = new FormatarData();
                         FormatarConta formatarConta = new FormatarConta();
                         FormatarNome formatarNome = new FormatarNome();
+                        FormatarTelefone telefone = new FormatarTelefone();
 
                         formatarNome.setNome(nomeCompleto);
                         String nome = formatarNome.getNome();
@@ -76,6 +76,8 @@ public class App {
                         cpf = formatarCpf.getCpfformatado();
                         formatarData.setDataTx(dataNascimento);
                         dataNascimento = formatarData.getDataTx();
+                        telefone.setNumeroTelefone(contato);
+                        contato= telefone.getNumeroTelefone();
                         formatarConta.setNumeroConta(String.valueOf(numerogerado));
                         String numeroCc = formatarConta.getNumeroConta();
 
@@ -96,7 +98,7 @@ public class App {
                                 JOptionPane.showMessageDialog(null, "Senha não conferem!", "ATENÇÃO!!!", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
-                        Clientes clientes1 = new Clientes(nomeCompleto,nome,dataNascimento,cpf,numeroCc,email,varCc,varCp,senhaCadastro);
+                        Clientes clientes1 = new Clientes(nomeCompleto,nome,dataNascimento,cpf,numeroCc,email,contato,varCc,varCp,varCi,senhaCadastro);
 
                         List<String> chaves = new ArrayList<>();
                         chaves.add(clientes1.getCpf());
@@ -180,13 +182,17 @@ public class App {
                             Conta.setVariacao(clienteLogado.getVarCc());
                         } else if(clienteLogado.getVarCp()==51){
                             Conta.setVariacao(clienteLogado.getVarCp());
+                        } else if(clienteLogado.getVarCi()==61){
+                            Conta.setVariacao(clienteLogado.getVarCi());
                         }
+
                         boolean sair = true;//variável de controlo do sistema após a autenticação do "login" e senha
 
                         CartaoCredito cartaoCredito = new CartaoCredito();
 
                         ArrayList<String> extratoCc = new ArrayList<>();
                         ArrayList<String> extratoCP = new ArrayList<>();
+                        ArrayList<String> extratoCi = new ArrayList<>();
                         ArrayList<String> Historico = new ArrayList<>();
 
                         label:
@@ -199,7 +205,8 @@ public class App {
 									3- Depósito
 									4- Transferência
 									5- Conta Poupança
-									6- Sair""", "Banco Digital", JOptionPane.INFORMATION_MESSAGE);
+									6- Conta Investimento
+									7- Sair""", "Banco Digital", JOptionPane.INFORMATION_MESSAGE);
 
                             if (opcao == null) {
                                 break;
@@ -228,18 +235,30 @@ public class App {
                                             //Conta.setVariacao(clienteLogado.getVarCp());
                                             varConta="51";
                                         }
+                                        case 2 -> {
+                                            assert clienteLogado != null;
+                                            contaInvestimento.setBloquearCi(clienteLogado.getVarCp() == 61);
+                                            //Conta.setVariacao(clienteLogado.getVarCp());
+                                            varConta="61";
+                                        }
                                     }
                                 }
+                                case "4" -> varConta = String.valueOf(Conta.getVariacao());
                                 case "5" -> {
                                     varConta = "51";
                                     contaPoupanca.setBloquearCp(true);
                                 }
-                                case "4" -> varConta = String.valueOf(Conta.getVariacao());
+                                case "6" -> {
+                                    varConta = "61";
+                                    ContaInvestimento.setBloquearCi(true);
+                                }
+
                             }
 
                             String[]opcaoC = {"Sim", "Não"};//verificar se o cliente tem as contas
                             ConfirmarConta contaC = new ContaCorrente();
                             ConfirmarConta contaP = new ContaPoupanca();
+                            ConfirmarConta contaI = new ContaInvestimento();
 
                             assert clienteLogado != null;
                             if(clienteLogado.getVarCc()==0 && !contaC.confirmar(varConta)){
