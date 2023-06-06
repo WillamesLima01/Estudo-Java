@@ -114,6 +114,15 @@ public class App {
                         JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso senhor(a), "+ nome +".\n"+
                                 "Sua Conta Corrente é "+ numeroCc,"Cadastro de Clientes", JOptionPane.INFORMATION_MESSAGE);
 
+                        String emailRemetente = "GrupoWDAVBD@gmail.com";
+                        String senhaRemetente = "2022bdti";
+
+                        String emailDestino = "illaap@hotmail.com";
+
+                        EnviarEmail enviarEmail = new EnviarEmail(emailRemetente, senhaRemetente);
+                        enviarEmail.enviarEmail(emailDestino);
+
+
                     } else {
 
                         JOptionPane.showMessageDialog(null, "Compreendemos sua decissão. Até logo!","Banco Digital agradece!", JOptionPane.INFORMATION_MESSAGE);
