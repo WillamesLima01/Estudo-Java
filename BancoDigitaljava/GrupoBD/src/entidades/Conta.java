@@ -1,20 +1,14 @@
 package entidades;
 
-import java.util.ArrayList;
-
 public abstract class Conta {
 
     private static String logado;
-    private String conta;
     private Double saldo;
     private Double transferencia;
     private Double saque;
     private Double deposito;
-    private Double pagamento;
     private static int variacao;
     private String descricaoExtrato;
-
-    ArrayList<String> HistoricoConta = new ArrayList<>();
 
     public Conta() {
 
@@ -31,21 +25,13 @@ public abstract class Conta {
     }
 
     public static int getVariacao() {
+
         return variacao;
     }
 
     public static void setVariacao(int variacao) {
+
         Conta.variacao = variacao;
-    }
-
-    public String getConta() {
-
-        return conta;
-    }
-
-    public void setConta(String conta) {
-
-        this.conta = conta;
     }
 
     public Double getSaldo() {
@@ -56,14 +42,7 @@ public abstract class Conta {
 
         this.saldo = saldo;
     }
-    public Double getPagamento() {
 
-        return pagamento;
-    }
-    public void setPagamento(Double pagamento) {
-
-        this.pagamento = pagamento;
-    }
     public Double getTransferencia() {
 
         return transferencia;
@@ -87,15 +66,6 @@ public abstract class Conta {
     public void setDeposito(Double deposito) {
 
         this.deposito = deposito;
-    }
-
-    public ArrayList<String> getHistoricoConta() {
-
-        return HistoricoConta;
-    }
-    public void setHistoricoConta(ArrayList<String> historicoConta) {
-
-        HistoricoConta = historicoConta;
     }
 
     public String getDescricaoExtrato() {

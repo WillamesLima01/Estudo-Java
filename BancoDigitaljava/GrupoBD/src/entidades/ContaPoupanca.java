@@ -1,26 +1,20 @@
 package entidades;
 
-import interfaces.ConfirmarConta;
-
 import javax.swing.*;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class ContaPoupanca extends Conta implements ConfirmarConta {
+public class ContaPoupanca extends Conta {
 
     private Double saldoCp;
-    private Double poupanca=0.0;
+    private Double poupanca = 0.0;
     private String dataTexto;
-    private Double rendimentoPoupanca;
     private static boolean bloquearCp;
     private String contaDestino;
-
-    ArrayList<String> extratoCp = new ArrayList<>();
 
     NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
 
@@ -31,15 +25,14 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
     public void setSaldoCp(Double saldoCp) {
         this.saldoCp = saldoCp;
         this.poupanca += this.saldoCp;
-        JOptionPane.showMessageDialog(null, "Seu novo saldo em conta poupança é "+ (vlr.format(this.poupanca)),"Saldo", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Seu novo saldo em conta poupança é " + (vlr.format(this.poupanca)), "Saldo", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
     public Double getRendimentoPoupanca() {
-        if(this.poupanca != 0.0) {
-            rendimentoPoupanca = this.poupanca + (this.poupanca * 0.02);
-            return rendimentoPoupanca;
-        }else {
+        if (this.poupanca != 0.0) {
+            return this.poupanca + (this.poupanca * 0.02);
+        } else {
             return 0.0;
         }
     }
@@ -48,21 +41,23 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
         if (saqueCp <= this.poupanca) {
             this.poupanca -= saqueCp;
             setSaldo(this.poupanca);
-            JOptionPane.showMessageDialog(null, "Saque no valor de "+ (vlr.format(saqueCp)+" realizado com sucesso"),"Saque Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
-            JOptionPane.showMessageDialog(null, "Seu novo saldo é "+ (vlr.format(getSaldo())),"Saldo Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Saque no valor de " + (vlr.format(saqueCp) + " realizado com sucesso"), "Saque Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seu novo saldo é " + (vlr.format(getSaldo())), "Saldo Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
 
-            JOptionPane.showMessageDialog(null, "Saldo insuficiente!","Saldo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Saldo insuficiente!", "Saldo", JOptionPane.INFORMATION_MESSAGE);
 
         }
     }
 
     public String getContaDestino() {
+
         return contaDestino;
     }
 
     public void setContaDestino(String contaDestino) {
+
         this.contaDestino = contaDestino;
     }
 
@@ -79,7 +74,7 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
             case "3" ->
                     setDescricaoExtrato("Operação Saque ; " + "Cc Var:51 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(getSaque())));
             case "4" ->
-                    setDescricaoExtrato("Operação Consulta rendimento ; " + "Cc Var:51 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(getRendimentoPoupanca()-this.poupanca)));
+                    setDescricaoExtrato("Operação Consulta rendimento ; " + "Cc Var:51 ; " + "Data/Hora : " + this.dataTexto + ";  Valor " + (vlr.format(getRendimentoPoupanca()) + ";  Rendimento " + (vlr.format(getRendimentoPoupanca() - this.poupanca))));
             case "5" ->
                     setDescricaoExtrato("Operação Depósito ; " + "Cc Var:51 ; " + "Data/Hora : " + this.dataTexto + ";  Valor  " + (vlr.format(this.getDeposito())));
             case "6" ->
@@ -92,22 +87,9 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
         this.dataTexto = dateFormat.format(dataAtual);
     }
 
-    public String getDataTexto() {
-        return dataTexto;
-    }
-
-    public void setDataTexto(String dataTexto) {
-        this.dataTexto = dataTexto;
-    }
-
     public Double getPoupanca() {
 
         return poupanca;
-    }
-
-    public void setPoupanca(Double poupanca) {
-
-        this.poupanca = poupanca;
     }
 
     public boolean isBloquearCp() {
@@ -120,8 +102,8 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
         ContaPoupanca.bloquearCp = bloquearCp;
     }
 
-    public void settransferenciaCp(Double transferencia){
-        if(poupanca >= transferencia) {
+    public void settransferenciaCp(Double transferencia) {
+        if (poupanca >= transferencia) {
             poupanca -= transferencia;
             JOptionPane.showMessageDialog(null, "Transferência realizada com sucesso senhor(a) " + getLogado(), "Transferência Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -132,21 +114,15 @@ public class ContaPoupanca extends Conta implements ConfirmarConta {
     public static Clientes abrirContaPoupanca(Map<String, List<Clientes>> clienteMap, String varConta) {
         for (List<Clientes> listaClientes : clienteMap.values()) {
             for (Clientes cliente : listaClientes) {
-                if (cliente.getVarCp()==0) {
+                if (cliente.getVarCp() == 0) {
                     cliente.setVarCp(Integer.parseInt(varConta));
                     Conta.setVariacao(Integer.parseInt(varConta));
-                    JOptionPane.showMessageDialog(null, "Abertura de conta poupança realizada com sucesso senhor(a) "+ cliente.getNome()+"! ", "Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Abertura de conta poupança realizada com sucesso senhor(a) " + cliente.getNome() + "! ", "Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
                     return cliente;
                 }
             }
         }
         return null; // Cliente não encontrado
-    }
-
-    @Override
-    public Boolean confirmar(String tipoConta) {
-
-        return (getVariacao()==Integer.parseInt(tipoConta));
     }
 
 }

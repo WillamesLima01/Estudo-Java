@@ -6,15 +6,10 @@ import java.text.NumberFormat;
 public class CartaoCredito {
 
     private double LimiteCredito = 3000;
-    private double SaldoDiponivel;
     private String DataVencimento;
     private double aumentolimite;
     private String compras;
     private double TotalCompras;
-    private String valorCompra;
-    private String localCompra;
-    private String dataCompra;
-    private String cancelaropcao;
 
     NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
 
@@ -22,31 +17,17 @@ public class CartaoCredito {
 
     }
 
-    public String getValorCompra() {
-
-        return valorCompra;
-    }
-
     public void setValorCompra(String valorCompra) {
+        Double valor = Double.parseDouble(valorCompra);
+        String valorTx = vlr.format(valor);
+        this.compras = "valor da compra : "+ valorTx;
 
-        this.compras = "valor da compra : "+ (vlr.format(valorCompra));
-
-    }
-
-    public String getLocalCompra() {
-
-        return localCompra;
     }
 
     public void setLocalCompra(String localCompra) {
 
         this.compras = this.compras + " ; Local da compra efetuada : " + localCompra;
 
-    }
-
-    public String getDataCompra() {
-
-        return dataCompra;
     }
 
     public void setDataCompra(String dataCompra) {

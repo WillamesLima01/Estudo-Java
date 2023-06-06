@@ -41,19 +41,9 @@ public class Clientes implements PermitirAcesso {
         listaClientes.add(this);
     }
 
-    public void setNomeCompleto(String nomeCompleto) {
-
-        this.nomeCompleto = nomeCompleto;
-    }
-
     public String getNome() {
 
         return nome;
-    }
-
-    public void setNome(String nome) {
-
-        this.nome = nome;
     }
 
     public String getDatanasc() {
@@ -61,47 +51,14 @@ public class Clientes implements PermitirAcesso {
         return datanasc;
     }
 
-    public void setDatanasc(String datanasc) {
-
-        this.datanasc = datanasc;
-    }
-
     public String getCpf() {
 
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-
-        this.cpf = cpf;
-    }
-
     public String getConta() {
 
         return conta;
-    }
-
-    public void setConta(String conta) {
-
-        this.conta = conta;
-    }
-
-    public String getEmail() {
-
-        return email;
-    }
-
-    public void setEmail(String email) {
-
-        this.email = email;
-    }
-
-    public String getContato() {
-        return contato;
-    }
-
-    public void setContato(String contato) {
-        this.contato = contato;
     }
 
     public int getVarCc() {
@@ -136,37 +93,6 @@ public class Clientes implements PermitirAcesso {
 
         return senha;
     }
-
-    public void setSenha(String senha) {
-
-        this.senha = senha;
-    }
-
-    public static ArrayList<Clientes> getListaClientes() {
-
-        return listaClientes;
-    }
-    public static void adicionarCliente(Clientes cliente) {
-
-        listaClientes.add(cliente);
-    }
-
-    /*public static Clientes abrirConta(Map<String, List<Clientes>> clienteMap, String varConta) {
-        for (List<Clientes> listaClientes : clienteMap.values()) {
-            for (Clientes cliente : listaClientes) {
-                if (cliente.getVarCc() == 0 && varConta.equals(10)) {
-                    cliente.setVarCc(Integer.parseInt(varConta));
-                    JOptionPane.showMessageDialog(null, "Abertura de conta corrente realizada com sucesso!", "Conta Corrente", JOptionPane.INFORMATION_MESSAGE);
-                    return cliente;
-                } else if (cliente.getVarCp() == 0 && varConta.equals(51)) {
-                    cliente.setVarCp(Integer.parseInt(varConta));
-                    JOptionPane.showMessageDialog(null, "Abertura de conta poupança realizada com sucesso!", "Conta Poupança", JOptionPane.INFORMATION_MESSAGE);
-                    return cliente;
-                }
-            }
-        }
-        return null; // Cliente não encontrado
-    }*/
 
     public static Clientes buscarClientePorChave(Map<String, List<Clientes>> clienteMap, String chave) {
         for (List<Clientes> listaClientes : clienteMap.values()) {

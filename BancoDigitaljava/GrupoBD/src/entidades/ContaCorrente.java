@@ -1,26 +1,20 @@
 package entidades;
 
-import interfaces.ConfirmarConta;
-
 import javax.swing.*;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class ContaCorrente extends Conta implements ConfirmarConta {
+public class ContaCorrente extends Conta {
 
     private Double saldoCc = 0.0;
     private Double contaCorrente = 0.0;
-    private double limiteChequeEspecial;
     private String dataTexto;
     private static boolean bloquearCc;
     private String contaDestino;
-
-    ArrayList<String> extratoCc = new ArrayList<>();
 
     NumberFormat vlr = NumberFormat.getCurrencyInstance();//formatar moeda (vlr.format(valor))
 
@@ -61,15 +55,6 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
         this.contaDestino = contaDestino;
     }
 
-    public double getLimiteChequeEspecial() {
-
-        return limiteChequeEspecial;
-    }
-    public void setLimiteChequeEspecial(double limiteChequeEspecial) {
-
-        this.limiteChequeEspecial = limiteChequeEspecial;
-    }
-
     public void setDataAtual(Date dataAtual) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         this.dataTexto = dateFormat.format(dataAtual);
@@ -80,7 +65,7 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
     }
     public void setBloquearCc(boolean bloquearCc) {
 
-        this.bloquearCc = bloquearCc;
+        ContaCorrente.bloquearCc = bloquearCc;
     }
 
     public static Clientes abrirContaCorrente(Map<String, List<Clientes>> clienteMap, String varConta) {
@@ -124,12 +109,4 @@ public class ContaCorrente extends Conta implements ConfirmarConta {
                     setDescricaoExtrato("Operação Transferência ; " + this.dataTexto + "; Conta beneficiada : " + getContaDestino() + "; Valor " + (vlr.format(this.getTransferencia())));
         }
     }
-
-    @Override
-    public Boolean confirmar(String tipoConta) {
-
-        return (getVariacao()==Integer.parseInt(tipoConta));
-
-    }
-
 }
