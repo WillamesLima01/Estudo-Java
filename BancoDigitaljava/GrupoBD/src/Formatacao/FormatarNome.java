@@ -7,10 +7,12 @@ public class FormatarNome {
 
     }
     public FormatarNome(String nome) {
+
         this.nome = nome;
     }
 
     public String getNome() {
+
         return nome;
     }
 
@@ -24,7 +26,7 @@ public class FormatarNome {
         int qc = primeiroNome[0].length();
 
         if(qc < 4) {
-            //usei uma array dentro da formula para converter as primeiras letras do nome composto
+            //usei uma array dentro da fórmula para converter as primeiras letras do nome composto
             stiloNome = primeiroNome[0].substring(0, 1).toUpperCase() + primeiroNome[0].substring(1) +
                     " " + primeiroNome[1].substring(0, 1).toUpperCase() + primeiroNome[1].substring(1);
 
