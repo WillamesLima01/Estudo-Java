@@ -29,18 +29,19 @@ public class MatriculaAlunoController {
         }
     }
 
-    @PatchMapping("/{id}/notas")
-    public ResponseEntity<Object> patchNotas(@PathVariable Long id, @RequestBody PatchNotasRequest patchNotasRequest){
-        try{
+    @PatchMapping("/notas/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void patchNotas(@PathVariable Long id, @RequestBody PatchNotasRequest patchNotasRequest){
+
             service.patchNotas(id, patchNotasRequest);
-            return ResponseEntity.noContent().build();
-        } catch (MatriculaNotFoundException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (ValidarNota ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno de servidor");
-        }
+            //return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/patchStatusParaTrancado/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void patchStatusParaTrancado(@PathVariable Long id){
+
+        service.patchStatusParaTrancado(id);
     }
 }
 
