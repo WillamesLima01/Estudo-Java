@@ -1,14 +1,14 @@
 package br.com.alunoonline.api.controller;
 
 import br.com.alunoonline.api.dtos.PatchNotasRequest;
-import br.com.alunoonline.api.exception.MatriculaNotFoundException;
-import br.com.alunoonline.api.exception.ValidarNota;
 import br.com.alunoonline.api.model.MatriculaAluno;
 import br.com.alunoonline.api.service.MatriculaAlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/matricula-aluno")
@@ -33,8 +33,7 @@ public class MatriculaAlunoController {
     @ResponseStatus(HttpStatus.OK)
     public void patchNotas(@PathVariable Long id, @RequestBody PatchNotasRequest patchNotasRequest){
 
-            service.patchNotas(id, patchNotasRequest);
-            //return ResponseEntity.noContent().build();
+        service.patchNotas(id, patchNotasRequest);
     }
 
     @PatchMapping("/patchStatusParaTrancado/{id}")
@@ -43,6 +42,7 @@ public class MatriculaAlunoController {
 
         service.patchStatusParaTrancado(id);
     }
+
 }
 
     //public void atualizar(@PathVariable Long id, @RequestBody Aluno alunoAtualizado) throws ChangeSetPersister.NotFoundException {

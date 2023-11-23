@@ -39,13 +39,29 @@ public class MatriculaAlunoService {
         if (matriculaAluno.isPresent()) {
             MatriculaAluno matriculaUpdated = matriculaAluno.get();
 
-            //validarNotas(patchNotasRequest.getNota1(), patchNotasRequest.getNota2());
-            validarNotas(patchNotasRequest.getNota1(), patchNotasRequest.getNota2());
-            matriculaUpdated.setNota1(patchNotasRequest.getNota1());
-            matriculaUpdated.setNota2(patchNotasRequest.getNota2());
-            //matriculaUpdated.setStatus(calcularStatus(media(matriculaUpdated.getNota1(),matriculaUpdated.getNota2())));
-            Double media = media(patchNotasRequest.getNota1(), patchNotasRequest.getNota2());
-            matriculaUpdated.setStatus(calcularStatus(media));
+            if(validarNotas(patchNotasRequest.getNota1(), patchNotasRequest.getNota2()) == "notas"){
+                matriculaUpdated.setNota1(patchNotasRequest.getNota1());
+                matriculaUpdated.setNota2(patchNotasRequest.getNota2());
+                Double media = media(patchNotasRequest.getNota1(), patchNotasRequest.getNota2());
+                matriculaUpdated.setStatus(calcularStatus(media));
+            } else if(validarNotas(patchNotasRequest.getNota1(), patchNotasRequest.getNota2()) != "nota1"){
+                if(matriculaUpdated.getNota2() != null) {
+                    matriculaUpdated.setNota1(patchNotasRequest.getNota1());
+                    Double media = media(matriculaUpdated.getNota1(), matriculaUpdated.getNota2());
+                    matriculaUpdated.setStatus(calcularStatus(media));
+                } else {
+                    matriculaUpdated.setNota1(patchNotasRequest.getNota1());
+                }
+            } else{
+                if(matriculaUpdated.getNota1() != null) {
+                    matriculaUpdated.setNota2(patchNotasRequest.getNota2());
+                    Double media = media(matriculaUpdated.getNota1(), matriculaUpdated.getNota2());
+                    matriculaUpdated.setStatus(calcularStatus(media));
+                } else {
+                    matriculaUpdated.setNota2(patchNotasRequest.getNota2());
+                }
+            }
+
             repository.save(matriculaUpdated);
 
         } else {
@@ -84,14 +100,34 @@ public class MatriculaAlunoService {
         return !matriculas.isEmpty();
     }
 
-    private void validarNotas(Double nota1, Double nota2){
-        if(nota1 == null || nota2 == null || nota1 < 0 || nota1 > 10 || nota2 < 0 || nota2 > 10){
-            throw new ValidarNota("Notas inválidas. Certifique-se de que as notas estã dentro do intervalo de 0 a 10");
+    private String validarNotas(Double nota1, Double nota2) {
+        if (nota1 == null && nota2 == null) {
+            throw new ValidarNota("Ambas as notas são nulas.");
         }
+
+        if (nota1 != null && (nota1 < 0 || nota1 > 10)) {
+            throw new ValidarNota("Nota1 inválida. Certifique-se de que a nota1 está dentro do intervalo de 0 a 10.");
+        }
+
+        if (nota2 != null && (nota2 < 0 || nota2 > 10)) {
+            throw new ValidarNota("Nota2 inválida. Certifique-se de que a nota2 está dentro do intervalo de 0 a 10.");
+        }
+
+        if (nota1 == null) {
+            return "nota1";
+        }
+
+        if (nota2 == null) {
+            return "nota2";
+        }
+
+        return "notas";
     }
+
 
     //quero a regra de calcular a média fora daqui
     private Double media(Double nota1, Double nota2){
+
         return (nota1 + nota2)/2;
     }
 
